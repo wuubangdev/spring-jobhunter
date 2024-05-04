@@ -10,9 +10,9 @@
 // @Configuration
 // public class RestConfiguration implements RepositoryRestConfigurer {
 
-//     @Override
-//     public void configureRepositoryRestConfiguration(
-//             RepositoryRestConfiguration config, CorsRegistry cors) {
-//         config.exposeIdsFor(User.class);
-//     }
+// @Override
+// public void configureRepositoryRestConfiguration(
+// RepositoryRestConfiguration config, CorsRegistry cors) {
+// config.exposeIdsFor(User.class);
+// }
 // }

@@ -16,7 +16,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User handleCreateUser(User user) {
+    public User handleSaveUser(User user) {
         return this.userRepository.save(user);
     }
 
@@ -24,8 +24,12 @@ public class UserService {
         this.userRepository.deleteById(id);
     }
 
-    public Optional<User> fetchUserById(long id) {
-        return this.userRepository.findById(id);
+    public User fetchUserById(long id) {
+        Optional<User> userOp = this.userRepository.findById(id);
+        if (userOp.isPresent()) {
+            return userOp.get();
+        }
+        return null;
     }
 
     public List<User> fetchAllUser() {

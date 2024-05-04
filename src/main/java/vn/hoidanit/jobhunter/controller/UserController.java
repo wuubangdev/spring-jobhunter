@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 public class UserController {
@@ -24,7 +25,7 @@ public class UserController {
 
     @PostMapping("/user")
     public User createNewUser(@RequestBody User user) {
-        User newUser = this.userService.handleCreateUser(user);
+        User newUser = this.userService.handleSaveUser(user);
         return newUser;
     }
 
@@ -36,11 +37,7 @@ public class UserController {
 
     @GetMapping("/user/{id}")
     public User getUser(@PathVariable("id") long id) {
-        User user = null;
-        Optional<User> userOp = this.userService.fetchUserById(id);
-        if (userOp.isPresent()) {
-            user = userOp.get();
-        }
+        User user = this.userService.fetchUserById(id);
         return user;
     }
 
@@ -50,4 +47,12 @@ public class UserController {
         return users;
     }
 
+    @PutMapping("/user/{id}")
+    public User putMethodName(@PathVariable("id") long id, @RequestBody User user) {
+        User updatedUser = this.userService.fetchUserById(id);
+        updatedUser.setEmail(user.getEmail());
+        updatedUser.setName(user.getName());
+        updatedUser = this.userService.handleSaveUser(updatedUser);
+        return updatedUser;
+    }
 }
