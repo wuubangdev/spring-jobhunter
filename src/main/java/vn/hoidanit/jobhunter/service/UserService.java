@@ -35,4 +35,13 @@ public class UserService {
     public List<User> fetchAllUser() {
         return this.userRepository.findAll();
     }
+
+    public User handleUpdatUser(User user) {
+        User currentUser = this.fetchUserById(user.getId());
+        currentUser.setEmail(user.getEmail());
+        currentUser.setName(user.getName());
+        currentUser.setPassword(user.getPassword());
+        currentUser = this.userRepository.save(currentUser);
+        return currentUser;
+    }
 }

@@ -6,7 +6,6 @@ import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.service.UserService;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,11 +47,8 @@ public class UserController {
     }
 
     @PutMapping("/user/{id}")
-    public User putMethodName(@PathVariable("id") long id, @RequestBody User user) {
-        User updatedUser = this.userService.fetchUserById(id);
-        updatedUser.setEmail(user.getEmail());
-        updatedUser.setName(user.getName());
-        updatedUser = this.userService.handleSaveUser(updatedUser);
+    public User putUpdateUser(@RequestBody User user) {
+        User updatedUser = this.userService.handleUpdatUser(user);
         return updatedUser;
     }
 }
