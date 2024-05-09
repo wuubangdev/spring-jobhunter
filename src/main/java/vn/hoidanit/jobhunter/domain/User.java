@@ -45,4 +45,12 @@ public class User {
         return "User [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + "]";
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 }
