@@ -44,4 +44,8 @@ public class UserService {
         currentUser = this.userRepository.save(currentUser);
         return currentUser;
     }
+
+    public User getUserByEmail(String email) {
+        return this.userRepository.findByEmail(email);
+    }
 }
