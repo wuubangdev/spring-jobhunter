@@ -23,10 +23,6 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
-
-	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-rest
-	// implementation("org.springframework.boot:spring-boot-starter-data-rest:3.2.5")
-
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("com.mysql:mysql-connector-j")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")

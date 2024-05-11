@@ -9,7 +9,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
-import jakarta.servlet.http.HttpServletResponse;
+import vn.hoidanit.jobhunter.domain.RestRespone;
 
 @RestControllerAdvice
 public class FormatRestResponse implements ResponseBodyAdvice<Object> {
@@ -30,7 +30,17 @@ public class FormatRestResponse implements ResponseBodyAdvice<Object> {
             ServerHttpResponse response) {
         ServletServerHttpResponse servlet = (ServletServerHttpResponse) response;
         int status = servlet.getServletResponse().getStatus();
-        return body;
+        RestRespone<Object> res = new RestRespone<>();
+        res.setStatusCode(status);
+        if (status >= 400) {
+            return body;
+        } else {
+            res.setError("No error");
+            res.setMessage("Call api success");
+            res.setData(body);
+        }
+
+        return res;
     }
 
 }
