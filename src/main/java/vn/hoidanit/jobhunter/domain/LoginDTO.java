@@ -1,7 +1,11 @@
 package vn.hoidanit.jobhunter.domain;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class LoginDTO {
+    @NotBlank(message = "Email khong duoc de trong")
     private String email;
+    @NotBlank(message = "Password khong duoc de trong")
     private String password;
 
     public String getEmail() {
