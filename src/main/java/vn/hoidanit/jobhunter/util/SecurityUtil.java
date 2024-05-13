@@ -2,7 +2,6 @@ package vn.hoidanit.jobhunter.util;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
