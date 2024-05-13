@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -17,13 +18,15 @@ import vn.hoidanit.jobhunter.domain.RestRespone;
 
 @RestControllerAdvice
 public class GlobalException {
-    @ExceptionHandler(value = IdInvalidException.class)
-    public ResponseEntity<RestRespone<Object>> handleIdException(IdInvalidException idException) {
+    @ExceptionHandler(value = {
+            UsernameNotFoundException.class,
+            BadCredentialsException.class
+    })
+    public ResponseEntity<RestRespone<Object>> handleIdException(Exception ex) {
         RestRespone<Object> res = new RestRespone<>();
         res.setStatusCode(HttpStatus.BAD_REQUEST.value());
-        res.setError("IdInvalidException");
-        res.setMessage(idException.getMessage());
-        res.setData(null);
+        res.setError(ex.getMessage());
+        res.setMessage("Exception occurs...");
         return ResponseEntity.badRequest().body(res);
     }
 
@@ -41,17 +44,16 @@ public class GlobalException {
             errors.add(fieldError.getDefaultMessage());
         }
         res.setMessage(errors.size() > 1 ? errors : errors.get(0));
-
         return ResponseEntity.badRequest().body(res);
 
     }
 
-    @ExceptionHandler(value = { InternalAuthenticationServiceException.class, BadCredentialsException.class })
-    public ResponseEntity<RestRespone<Object>> AuthServiceException(InternalAuthenticationServiceException ex) {
+    @ExceptionHandler(value = { InternalAuthenticationServiceException.class })
+    public ResponseEntity<RestRespone<Object>> AuthServiceException(Exception ex) {
         RestRespone<Object> res = new RestRespone<>();
         res.setStatusCode(HttpStatus.BAD_REQUEST.value());
-        res.setError(ex.getMessage());
-        res.setMessage("Tai khoan khong chinh xac");
+        res.setError("Bad credentials");
+        res.setMessage("Exception occurs...");
         return ResponseEntity.badRequest().body(res);
     }
 }
