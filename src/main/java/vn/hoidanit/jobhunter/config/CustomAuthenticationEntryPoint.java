@@ -34,7 +34,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
         RestResponse<Object> res = new RestResponse<>();
         res.setStatus(HttpStatus.UNAUTHORIZED.value());
-        res.setError(authException.getCause().getMessage());
+        res.setError(authException.getMessage());
         res.setMessage("Token không hợp lệ (hết hạn, không đúng định dạng, hoặc không đúng)");
 
         mapper.writeValue(response.getWriter(), res);
