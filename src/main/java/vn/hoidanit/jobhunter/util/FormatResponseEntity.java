@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import vn.hoidanit.jobhunter.domain.RestResponse;
+import vn.hoidanit.jobhunter.util.anotation.ApiMessage;
 
 @RestControllerAdvice
 public class FormatResponseEntity implements ResponseBodyAdvice<Object> {
@@ -30,6 +31,7 @@ public class FormatResponseEntity implements ResponseBodyAdvice<Object> {
 
         ServletServerHttpResponse servletServerHttpResponse = (ServletServerHttpResponse) response;
         int status = servletServerHttpResponse.getServletResponse().getStatus();
+        ApiMessage message = returnType.getMethodAnnotation(ApiMessage.class);
 
         RestResponse<Object> res = new RestResponse<Object>();
         res.setStatus(status);
@@ -40,7 +42,7 @@ public class FormatResponseEntity implements ResponseBodyAdvice<Object> {
         if (status >= 400) {// case error
             return body;
         } else {// case success
-            res.setMessage("CALL API SUCCESS");
+            res.setMessage(message != null ? message.value() : "CALL API SUCCESS");
             res.setData(body);
         }
         return res;

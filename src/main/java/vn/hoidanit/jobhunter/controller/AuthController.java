@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import vn.hoidanit.jobhunter.domain.LoginDTO;
 import vn.hoidanit.jobhunter.domain.ResToken;
 import vn.hoidanit.jobhunter.util.SecurityUtil;
+import vn.hoidanit.jobhunter.util.anotation.ApiMessage;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,6 +30,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    @ApiMessage("Login success")
     public ResponseEntity<ResToken> postLogin(@Valid @RequestBody LoginDTO loginDTO) {
 
         // Nạp input gồm username/password vào Security

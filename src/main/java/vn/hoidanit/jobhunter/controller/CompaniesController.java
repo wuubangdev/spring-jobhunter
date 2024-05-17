@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import vn.hoidanit.jobhunter.domain.Company;
 import vn.hoidanit.jobhunter.domain.ResultPaginate;
 import vn.hoidanit.jobhunter.service.CompaniesService;
+import vn.hoidanit.jobhunter.util.anotation.ApiMessage;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import com.turkraft.springfilter.boot.Filter;
@@ -31,17 +33,20 @@ public class CompaniesController {
     }
 
     @PostMapping("/companies")
+    @ApiMessage("Create company success")
     public ResponseEntity<Company> createCompany(@Valid @RequestBody Company company) {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(this.companiesService.handleCreateCompany(company));
     }
 
     @GetMapping("/companies/{id}")
+    @ApiMessage("Fetch company success")
     public ResponseEntity<Company> getCompaniesById(@PathVariable("id") long id) {
         return ResponseEntity.ok(this.companiesService.fetchCompanyById(id));
     }
 
     @GetMapping("/companies")
+    @ApiMessage("Fetch list company success")
     public ResponseEntity<ResultPaginate> getAllCompany(
             @Filter Specification<Company> spec,
             Pageable pageable) {
@@ -50,11 +55,13 @@ public class CompaniesController {
     }
 
     @PutMapping("/companies")
+    @ApiMessage("Update company success")
     public ResponseEntity<Company> putMethodName(@RequestBody Company company) {
         return ResponseEntity.ok().body(this.companiesService.updateCompany(company));
     }
 
     @DeleteMapping("/companies/{id}")
+    @ApiMessage("Delete company success")
     public ResponseEntity<String> deleteCompaniesById(@PathVariable("id") long id) {
         this.companiesService.deleteCompanyById(id);
         return ResponseEntity.status(HttpStatus.OK).body("Delete user " + id + " success");

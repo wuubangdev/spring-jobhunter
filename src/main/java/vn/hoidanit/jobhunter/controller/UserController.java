@@ -8,6 +8,7 @@ import vn.hoidanit.jobhunter.domain.ResultPaginate;
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.service.UserService;
 import vn.hoidanit.jobhunter.service.error.IdInvalidException;
+import vn.hoidanit.jobhunter.util.anotation.ApiMessage;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -34,6 +35,7 @@ public class UserController {
     }
 
     @PostMapping("/user")
+    @ApiMessage("Create new user success")
     public ResponseEntity<User> createNewUser(@RequestBody User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         User createdUser = this.userService.handleCreateUser(user);
@@ -41,12 +43,14 @@ public class UserController {
     }
 
     @GetMapping("/user/{id}")
+    @ApiMessage("Fetch user success")
     public ResponseEntity<User> getUserById(@PathVariable("id") long id) {
         User user = this.userService.fetchUserById(id);
         return ResponseEntity.ok(user);
     }
 
     @GetMapping("/user")
+    @ApiMessage("Fetch list user success")
     public ResponseEntity<ResultPaginate> getAllUser(
             @Filter Specification<User> spec,
             Pageable pageable) {
@@ -54,12 +58,14 @@ public class UserController {
     }
 
     @PutMapping("/user")
+    @ApiMessage("Update user success")
     public ResponseEntity<User> putUpdateUser(@RequestBody User user) {
         User updatedUser = this.userService.updateUser(user);
         return ResponseEntity.ok(updatedUser);
     }
 
     @DeleteMapping("/user/{id}")
+    @ApiMessage("Delete user success")
     public ResponseEntity<String> deleteUserById(@PathVariable("id") long id) throws IdInvalidException {
 
         if (id >= 100) {
