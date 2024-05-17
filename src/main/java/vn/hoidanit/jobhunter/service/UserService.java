@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import vn.hoidanit.jobhunter.domain.MetaDTO;
@@ -35,8 +36,8 @@ public class UserService {
         return null;
     }
 
-    public ResultPaginate fetchAllUser(Pageable pageable) {
-        Page<User> pageUser = this.userRepository.findAll(pageable);
+    public ResultPaginate fetchAllUser(Specification<User> spec, Pageable pageable) {
+        Page<User> pageUser = this.userRepository.findAll(spec, pageable);
         MetaDTO mt = new MetaDTO();
         ResultPaginate rsp = new ResultPaginate();
         mt.setCurrent(pageUser.getNumber());
