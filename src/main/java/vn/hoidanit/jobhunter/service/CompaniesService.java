@@ -1,8 +1,15 @@
 package vn.hoidanit.jobhunter.service;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import vn.hoidanit.jobhunter.domain.Company;
+import vn.hoidanit.jobhunter.domain.MetaDTO;
+import vn.hoidanit.jobhunter.domain.ResultPaginate;
 import vn.hoidanit.jobhunter.repository.CompaniesRepository;
 
 @Service
@@ -16,4 +23,42 @@ public class CompaniesService {
     public Company handleCreateCompany(Company c) {
         return this.companiesRepository.save(c);
     }
+
+    public Company fetchCompanyById(long id) {
+        Optional<Company> comOptional = this.companiesRepository.findById(id);
+        if (comOptional.isPresent()) {
+            return this.companiesRepository.findById(id).get();
+        }
+        return null;
+    }
+
+    public ResultPaginate fetchAllCompanies(Pageable pageable) {
+        Page<Company> pageCompanies = this.companiesRepository.findAll(pageable);
+        MetaDTO mt = new MetaDTO();
+        ResultPaginate rsp = new ResultPaginate();
+        mt.setCurrent(pageCompanies.getNumber());
+        mt.setPageSize(pageCompanies.getSize());
+        mt.setTotalPages(pageCompanies.getTotalPages());
+        mt.setTotalIteams(pageCompanies.getTotalElements());
+        rsp.setMeta(mt);
+        rsp.setData(pageCompanies.getContent());
+        return rsp;
+    }
+
+    public Company updateCompany(Company c) {
+        Company currentCompany = this.fetchCompanyById(c.getId());
+        if (currentCompany != null) {
+            currentCompany.setName(c.getName());
+            currentCompany.setDescription(c.getDescription());
+            currentCompany.setAddress(c.getAddress());
+            currentCompany.setLogo(c.getLogo());
+            return this.companiesRepository.save(currentCompany);
+        }
+        return null;
+    }
+
+    public void deleteCompanyById(long id) {
+        this.companiesRepository.deleteById(id);
+    }
+
 }
