@@ -1,12 +1,23 @@
 package vn.hoidanit.jobhunter.domain;
 
+import java.time.Instant;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PostPersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+import vn.hoidanit.jobhunter.util.SecurityUtil;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "users")
 public class User {
     @Id
@@ -16,41 +27,23 @@ public class User {
     private String email;
     private String password;
 
-    public String getName() {
-        return name;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
+    private Instant createdAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
+    private Instant updatedAt;
+
+    private String createdBy;
+    private String updatedBy;
+
+    @PostPersist
+    public void handlePostPersist() {
+        this.createdAt = Instant.now();
+        this.createdBy = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : "";
     }
 
-    public void setName(String name) {
-        this.name = name;
+    @PreUpdate
+    public void handlePreUpdate() {
+        this.updatedAt = Instant.now();
+        this.updatedBy = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : "";
     }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    @Override
-    public String toString() {
-        return "User [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + "]";
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
 }
