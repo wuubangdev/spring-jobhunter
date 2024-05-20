@@ -13,6 +13,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import vn.hoidanit.jobhunter.domain.RestRespone;
 
@@ -20,7 +21,8 @@ import vn.hoidanit.jobhunter.domain.RestRespone;
 public class GlobalException {
     @ExceptionHandler(value = {
             UsernameNotFoundException.class,
-            BadCredentialsException.class
+            BadCredentialsException.class,
+            IdInvalidException.class
     })
     public ResponseEntity<RestRespone<Object>> handleIdException(Exception ex) {
         RestRespone<Object> res = new RestRespone<>();
@@ -49,10 +51,19 @@ public class GlobalException {
     }
 
     @ExceptionHandler(value = { InternalAuthenticationServiceException.class })
-    public ResponseEntity<RestRespone<Object>> AuthServiceException(Exception ex) {
+    public ResponseEntity<RestRespone<Object>> authServiceException(Exception ex) {
         RestRespone<Object> res = new RestRespone<>();
         res.setStatusCode(HttpStatus.BAD_REQUEST.value());
         res.setError("Bad credentials");
+        res.setMessage("Exception occurs...");
+        return ResponseEntity.badRequest().body(res);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<RestRespone<Object>> noResourceFoundException(Exception ex) {
+        RestRespone<Object> res = new RestRespone<>();
+        res.setStatusCode(HttpStatus.NOT_FOUND.value());
+        res.setError("NoResourceFoundException");
         res.setMessage("Exception occurs...");
         return ResponseEntity.badRequest().body(res);
     }
