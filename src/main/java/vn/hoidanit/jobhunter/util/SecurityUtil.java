@@ -17,6 +17,9 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
+import vn.hoidanit.jobhunter.domain.LoginDTO;
+import vn.hoidanit.jobhunter.domain.ResTokenDTO;
+
 @Service
 public class SecurityUtil {
 
@@ -27,18 +30,36 @@ public class SecurityUtil {
         this.jwtEncoder = jwtEncoder;
     }
 
-    @Value("${hoidanit.jwt.token-validity-in-second}")
-    private Long jwtKeyExpiration;
+    @Value("${hoidanit.jwt.access-token-validity-in-second}")
+    private Long jwtKeyAccessExpiration;
 
-    public String createToken(Authentication authentication) {
+    public String createAccessToken(Authentication authentication) {
         Instant now = Instant.now();
-        Instant validity = now.plus(this.jwtKeyExpiration, ChronoUnit.SECONDS);
+        Instant validity = now.plus(this.jwtKeyAccessExpiration, ChronoUnit.SECONDS);
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuedAt(now)
                 .expiresAt(validity)
                 .subject(authentication.getName())
                 .claim("hoidanid", authentication)
+                .build();
+        JwsHeader jwsHeader = JwsHeader.with(JWT_ALROGITHM).build();
+
+        return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
+    }
+
+    @Value("${hoidanit.jwt.access-token-validity-in-second}")
+    private Long jwtKeyRefreshExpiration;
+
+    public String createRefreshToken(String email, ResTokenDTO dto) {
+        Instant now = Instant.now();
+        Instant validity = now.plus(this.jwtKeyRefreshExpiration, ChronoUnit.SECONDS);
+
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .issuedAt(now)
+                .expiresAt(validity)
+                .subject(email)
+                .claim("user", dto.getUser())
                 .build();
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALROGITHM).build();
 

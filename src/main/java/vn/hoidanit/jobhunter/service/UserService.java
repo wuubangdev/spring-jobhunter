@@ -106,4 +106,12 @@ public class UserService {
         getUserDTO.setUpdatedAt(gotUser.getUpdatedAt());
         return getUserDTO;
     }
+
+    public void updateUserToken(String email, String refreshToken) {
+        User currentUser = this.getUserByEmail(email);
+        if (currentUser != null) {
+            currentUser.setRefreshToken(refreshToken);
+            this.userRepository.save(currentUser);
+        }
+    }
 }
