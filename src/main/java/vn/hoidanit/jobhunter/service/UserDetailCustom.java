@@ -20,7 +20,7 @@ public class UserDetailCustom implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        vn.hoidanit.jobhunter.domain.User user = this.userService.handleGetUserByEmail(username);
+        vn.hoidanit.jobhunter.domain.user.User user = this.userService.handleGetUserByEmail(username);
         return new User(
                 user.getEmail(),
                 user.getPassword(),

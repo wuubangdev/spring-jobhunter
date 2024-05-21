@@ -1,6 +1,9 @@
 package vn.hoidanit.jobhunter.service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,7 +12,9 @@ import org.springframework.stereotype.Service;
 
 import vn.hoidanit.jobhunter.domain.MetaDTO;
 import vn.hoidanit.jobhunter.domain.ResultPaginate;
-import vn.hoidanit.jobhunter.domain.User;
+import vn.hoidanit.jobhunter.domain.user.ResCreateUserDTO;
+import vn.hoidanit.jobhunter.domain.user.ResUserDTO;
+import vn.hoidanit.jobhunter.domain.user.User;
 import vn.hoidanit.jobhunter.repository.UserRepository;
 
 @Service
@@ -41,7 +46,19 @@ public class UserService {
         mt.setTotalPages(userCompanies.getTotalPages());
         mt.setTotalIteams(userCompanies.getTotalElements());
         rsp.setMeta(mt);
-        rsp.setData(userCompanies.getContent());
+
+        List<ResUserDTO> listUserDTO = userCompanies.getContent()
+                .stream().map(item -> new ResUserDTO(
+                        item.getId(),
+                        item.getName(),
+                        item.getEmail(),
+                        item.getGender(),
+                        item.getAddress(),
+                        item.getAge(),
+                        item.getCreatedAt(),
+                        item.getUpdateAt()))
+                .collect(Collectors.toList());
+        rsp.setData(listUserDTO);
         return rsp;
     }
 
@@ -49,7 +66,9 @@ public class UserService {
         User currentUser = this.fetchUserById(user.getId());
         if (currentUser != null) {
             currentUser.setName(user.getName());
-            currentUser.setEmail(user.getEmail());
+            currentUser.setGender(user.getGender());
+            currentUser.setAddress(user.getAddress());
+            currentUser.setAge(user.getAge());
             this.userRepository.save(currentUser);
             return currentUser;
         }
@@ -63,4 +82,30 @@ public class UserService {
     public User handleGetUserByEmail(String email) {
         return this.userRepository.findByEmail(email);
     }
+
+    public ResCreateUserDTO convertToCreateUserDTO(User createdUser) {
+        ResCreateUserDTO createUserDTO = new ResCreateUserDTO();
+        createUserDTO.setId(createdUser.getId());
+        createUserDTO.setName(createdUser.getName());
+        createUserDTO.setEmail(createdUser.getEmail());
+        createUserDTO.setAddress(createdUser.getAddress());
+        createUserDTO.setAge(createdUser.getAge());
+        createUserDTO.setGender(createdUser.getGender());
+        createUserDTO.setCreatedAt(createdUser.getCreatedAt());
+        return createUserDTO;
+    }
+
+    public ResUserDTO convertToUserDTO(User user) {
+        ResUserDTO userDTO = new ResUserDTO();
+        userDTO.setId(user.getId());
+        userDTO.setName(user.getName());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setAddress(user.getAddress());
+        userDTO.setAge(user.getAge());
+        userDTO.setGender(user.getGender());
+        userDTO.setCreatedAt(user.getCreatedAt());
+        userDTO.setUpdatedAt(user.getUpdateAt());
+        return userDTO;
+    }
+
 }

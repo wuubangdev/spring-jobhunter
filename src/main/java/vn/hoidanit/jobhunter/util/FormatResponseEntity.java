@@ -31,7 +31,6 @@ public class FormatResponseEntity implements ResponseBodyAdvice<Object> {
 
         ServletServerHttpResponse servletServerHttpResponse = (ServletServerHttpResponse) response;
         int status = servletServerHttpResponse.getServletResponse().getStatus();
-        ApiMessage message = returnType.getMethodAnnotation(ApiMessage.class);
 
         RestResponse<Object> res = new RestResponse<Object>();
         res.setStatus(status);
@@ -42,6 +41,7 @@ public class FormatResponseEntity implements ResponseBodyAdvice<Object> {
         if (status >= 400) {// case error
             return body;
         } else {// case success
+            ApiMessage message = returnType.getMethodAnnotation(ApiMessage.class);
             res.setMessage(message != null ? message.value() : "CALL API SUCCESS");
             res.setData(body);
         }

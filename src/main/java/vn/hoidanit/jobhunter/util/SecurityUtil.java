@@ -17,6 +17,8 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
+import vn.hoidanit.jobhunter.domain.ResUserTokenLogin;
+
 @Service
 public class SecurityUtil {
 
@@ -28,18 +30,35 @@ public class SecurityUtil {
         this.jwtEncoder = jwtEncoder;
     }
 
-    @Value("${hoidanit.jwt.token-validity-in-second}")
-    private long jwtKeyEpiration;
+    @Value("${hoidanit.jwt.access-token-validity-in-second}")
+    private long jwtKeyAccessExpiration;
 
-    public String createToken(Authentication authentication) {
+    @Value("${hoidanit.jwt.refresh-token-validity-in-second}")
+    private long jwtKeyRefreshExpiration;
+
+    public String createAccessToken(Authentication authentication) {
         Instant now = Instant.now();
-        Instant validity = now.plus(jwtKeyEpiration, ChronoUnit.SECONDS);
+        Instant validity = now.plus(jwtKeyAccessExpiration, ChronoUnit.SECONDS);
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .expiresAt(now)
                 .expiresAt(validity)
                 .subject(authentication.getName())
-                .claim("hoidanit", authentication)
+                .claim("user", authentication)
+                .build();
+        JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
+        return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
+    }
+
+    public String createRefreshToken(String email, ResUserTokenLogin resUserToken) {
+        Instant now = Instant.now();
+        Instant validity = now.plus(jwtKeyRefreshExpiration, ChronoUnit.SECONDS);
+
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .expiresAt(now)
+                .expiresAt(validity)
+                .subject(email)
+                .claim("user", resUserToken)
                 .build();
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
         return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();

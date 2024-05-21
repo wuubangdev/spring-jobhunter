@@ -1,4 +1,4 @@
-package vn.hoidanit.jobhunter.service.error;
+package vn.hoidanit.jobhunter.util.error;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +12,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import vn.hoidanit.jobhunter.domain.RestResponse;
 
@@ -19,13 +20,14 @@ import vn.hoidanit.jobhunter.domain.RestResponse;
 public class GlobalException {
     @ExceptionHandler(value = {
             UsernameNotFoundException.class,
-            BadCredentialsException.class
+            BadCredentialsException.class,
+            IdInvalidException.class
     })
     public ResponseEntity<RestResponse<Object>> IdException(Exception ex) {
         RestResponse<Object> res = new RestResponse<Object>();
         res.setStatus(HttpStatus.UNAUTHORIZED.value());
         res.setError(ex.getMessage());
-        res.setMessage("Exeption occurs...");
+        res.setMessage("Exception occurs...");
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res);
     }
 
@@ -48,4 +50,13 @@ public class GlobalException {
         return ResponseEntity.badRequest().body(res);
     }
 
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<RestResponse<Object>> noResourceFoundException(Exception ex) {
+
+        RestResponse<Object> res = new RestResponse<Object>();
+        res.setStatus(HttpStatus.NOT_FOUND.value());
+        res.setError("No resource found exception!!!");
+        res.setMessage("Exception occurs...");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
+    }
 }

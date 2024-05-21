@@ -4,10 +4,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import vn.hoidanit.jobhunter.domain.LoginDTO;
-import vn.hoidanit.jobhunter.domain.ResToken;
+import vn.hoidanit.jobhunter.domain.ResUserTokenLogin;
+import vn.hoidanit.jobhunter.domain.user.User;
+import vn.hoidanit.jobhunter.service.UserService;
 import vn.hoidanit.jobhunter.util.SecurityUtil;
 import vn.hoidanit.jobhunter.util.anotation.ApiMessage;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -23,15 +28,22 @@ public class AuthController {
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final SecurityUtil securityUtil;
+    private final UserService userService;
 
-    public AuthController(AuthenticationManagerBuilder authenticationManagerBuilder, SecurityUtil securityUtil) {
+    @Value("${hoidanit.jwt.refresh-token-validity-in-second}")
+    private long jwtKeyRefreshExpiration;
+
+    public AuthController(AuthenticationManagerBuilder authenticationManagerBuilder,
+            SecurityUtil securityUtil,
+            UserService userService) {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.securityUtil = securityUtil;
+        this.userService = userService;
     }
 
-    @PostMapping("/login")
+    @PostMapping("/auth/login")
     @ApiMessage("Login success")
-    public ResponseEntity<ResToken> postLogin(@Valid @RequestBody LoginDTO loginDTO) {
+    public ResponseEntity<ResUserTokenLogin> postLogin(@Valid @RequestBody LoginDTO loginDTO) {
 
         // Nạp input gồm username/password vào Security
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
@@ -43,11 +55,31 @@ public class AuthController {
         // nạp thông tin (nếu xử lý thành công) vào SecurityContext
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String access_token = this.securityUtil.createToken(authentication);
-        ResToken resToken = new ResToken();
-        resToken.setAccess_token(access_token);
+        // Tao access token
+        String access_token = this.securityUtil.createAccessToken(authentication);
+        ResUserTokenLogin resUserToken = new ResUserTokenLogin();
+        resUserToken.setAccess_token(access_token);
 
-        return ResponseEntity.ok().body(resToken);
+        User currentUserDB = this.userService.handleGetUserByEmail(loginDTO.getEmail());
+
+        ResUserTokenLogin.UserLogin userLogin = new ResUserTokenLogin.UserLogin(currentUserDB.getEmail(),
+                currentUserDB.getName());
+        resUserToken.setUserLogin(userLogin);
+
+        // Create refresh token
+        String refresh_token = this.securityUtil.createRefreshToken(userLogin.getEmail(), resUserToken);
+        // Create ResponseCookie refresh token
+        ResponseCookie responseCookie = ResponseCookie.from("refresh_token", refresh_token)
+                .httpOnly(true)
+                .secure(true)
+                .maxAge(jwtKeyRefreshExpiration)
+                .path("/")
+                .build();
+
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .body(resUserToken);
     }
 
 }
