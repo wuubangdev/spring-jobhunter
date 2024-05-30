@@ -33,7 +33,7 @@ public class FormatResponseEntity implements ResponseBodyAdvice<Object> {
         int status = servletServerHttpResponse.getServletResponse().getStatus();
 
         RestResponse<Object> res = new RestResponse<Object>();
-        res.setStatus(status);
+        res.setStatusCode(status);
 
         if (body instanceof String) {
             return body;

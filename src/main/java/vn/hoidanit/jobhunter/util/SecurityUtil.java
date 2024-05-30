@@ -2,7 +2,11 @@ package vn.hoidanit.jobhunter.util;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+
+import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -15,7 +19,10 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Service;
+
+import com.nimbusds.jose.util.Base64;
 
 import vn.hoidanit.jobhunter.domain.ResUserTokenLogin;
 
@@ -30,21 +37,30 @@ public class SecurityUtil {
         this.jwtEncoder = jwtEncoder;
     }
 
+    @Value("${hoidanit.jwt.base64-secret}")
+    private String jwtKey;
+
     @Value("${hoidanit.jwt.access-token-validity-in-second}")
     private long jwtKeyAccessExpiration;
 
     @Value("${hoidanit.jwt.refresh-token-validity-in-second}")
     private long jwtKeyRefreshExpiration;
 
-    public String createAccessToken(Authentication authentication) {
+    public String createAccessToken(String email, ResUserTokenLogin resUserToken) {
         Instant now = Instant.now();
         Instant validity = now.plus(jwtKeyAccessExpiration, ChronoUnit.SECONDS);
+
+        // hardcode permission
+        List<String> listAuthority = new ArrayList<>();
+        listAuthority.add("ROLE_USER_CREATE");
+        listAuthority.add("ROLE_USER_UPDATE");
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .expiresAt(now)
                 .expiresAt(validity)
-                .subject(authentication.getName())
-                .claim("user", authentication)
+                .subject(email)
+                .claim("user", resUserToken.getUserLogin())
+                .claim("permission", listAuthority)
                 .build();
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
         return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
@@ -85,6 +101,22 @@ public class SecurityUtil {
             return s;
         }
         return null;
+    }
+
+    private SecretKeySpec getSecretKey() {
+        byte[] keyBytes = Base64.from(jwtKey).decode();
+        return new SecretKeySpec(keyBytes, 0, keyBytes.length, JWT_ALGORITHM.getName());
+    }
+
+    public Jwt chekValidRefreshToken(String token) {
+        NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withSecretKey(getSecretKey())
+                .macAlgorithm(JWT_ALGORITHM).build();
+        try {
+            return jwtDecoder.decode(token);
+        } catch (Exception e) {
+            System.out.println(">>> JWT error: " + e.getMessage());
+            throw e;
+        }
     }
 
     /**

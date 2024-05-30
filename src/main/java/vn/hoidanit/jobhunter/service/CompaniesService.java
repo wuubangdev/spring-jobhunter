@@ -41,7 +41,7 @@ public class CompaniesService {
         mt.setTotalPages(pageCompanies.getTotalPages());
         mt.setTotalIteams(pageCompanies.getTotalElements());
         rsp.setMeta(mt);
-        rsp.setData(pageCompanies.getContent());
+        rsp.setResult(pageCompanies.getContent());
         return rsp;
     }
 

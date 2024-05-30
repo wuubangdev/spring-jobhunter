@@ -33,7 +33,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.setContentType("application/json;charset=UTF-8");
 
         RestResponse<Object> res = new RestResponse<>();
-        res.setStatus(HttpStatus.UNAUTHORIZED.value());
+        res.setStatusCode(HttpStatus.UNAUTHORIZED.value());
         res.setError(authException.getMessage());
         res.setMessage("Token không hợp lệ (hết hạn, không đúng định dạng, hoặc không đúng)");
 

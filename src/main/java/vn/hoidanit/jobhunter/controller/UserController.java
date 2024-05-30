@@ -36,7 +36,7 @@ public class UserController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @PostMapping("/user")
+    @PostMapping("/users")
     @ApiMessage("Create new user success")
     public ResponseEntity<ResCreateUserDTO> createNewUser(@RequestBody User user) throws IdInvalidException {
         User reqUser = this.userService.handleGetUserByEmail(user.getEmail());
@@ -50,7 +50,7 @@ public class UserController {
                 .body(this.userService.convertToCreateUserDTO(createdUser));
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/users/{id}")
     @ApiMessage("Fetch user success")
     public ResponseEntity<ResUserDTO> getUserById(@PathVariable("id") long id) throws IdInvalidException {
         User user = this.userService.fetchUserById(id);
@@ -60,7 +60,7 @@ public class UserController {
         return ResponseEntity.ok(this.userService.convertToUserDTO(user));
     }
 
-    @GetMapping("/user")
+    @GetMapping("/users")
     @ApiMessage("Fetch list user success")
     public ResponseEntity<ResultPaginate> getAllUser(
             @Filter Specification<User> spec,
@@ -68,7 +68,7 @@ public class UserController {
         return ResponseEntity.ok(this.userService.fetchAllUsers(spec, pageable));
     }
 
-    @PutMapping("/user")
+    @PutMapping("/users")
     @ApiMessage("Update user success")
     public ResponseEntity<ResUserDTO> putUpdateUser(@RequestBody User user) throws IdInvalidException {
         User updatedUser = this.userService.updateUser(user);

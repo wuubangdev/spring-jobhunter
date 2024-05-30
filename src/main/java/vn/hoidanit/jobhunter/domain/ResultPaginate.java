@@ -7,5 +7,5 @@ import lombok.Setter;
 @Setter
 public class ResultPaginate {
     private MetaDTO meta;
-    private Object data;
+    private Object result;
 }

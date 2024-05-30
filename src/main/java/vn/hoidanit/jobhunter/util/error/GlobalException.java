@@ -25,7 +25,7 @@ public class GlobalException {
     })
     public ResponseEntity<RestResponse<Object>> IdException(Exception ex) {
         RestResponse<Object> res = new RestResponse<Object>();
-        res.setStatus(HttpStatus.UNAUTHORIZED.value());
+        res.setStatusCode(HttpStatus.UNAUTHORIZED.value());
         res.setError(ex.getMessage());
         res.setMessage("Exception occurs...");
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res);
@@ -37,7 +37,7 @@ public class GlobalException {
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
 
         RestResponse<Object> res = new RestResponse<>();
-        res.setStatus(HttpStatus.BAD_REQUEST.value());
+        res.setStatusCode(HttpStatus.BAD_REQUEST.value());
         res.setError("Bad Credentials");
 
         List<String> errors = new ArrayList<>();
@@ -54,7 +54,7 @@ public class GlobalException {
     public ResponseEntity<RestResponse<Object>> noResourceFoundException(Exception ex) {
 
         RestResponse<Object> res = new RestResponse<Object>();
-        res.setStatus(HttpStatus.NOT_FOUND.value());
+        res.setStatusCode(HttpStatus.NOT_FOUND.value());
         res.setError("No resource found exception!!!");
         res.setMessage("Exception occurs...");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);

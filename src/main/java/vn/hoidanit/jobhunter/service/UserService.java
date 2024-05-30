@@ -2,7 +2,6 @@ package vn.hoidanit.jobhunter.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -56,9 +55,9 @@ public class UserService {
                         item.getAddress(),
                         item.getAge(),
                         item.getCreatedAt(),
-                        item.getUpdateAt()))
+                        item.getUpdatedAt()))
                 .collect(Collectors.toList());
-        rsp.setData(listUserDTO);
+        rsp.setResult(listUserDTO);
         return rsp;
     }
 
@@ -104,8 +103,20 @@ public class UserService {
         userDTO.setAge(user.getAge());
         userDTO.setGender(user.getGender());
         userDTO.setCreatedAt(user.getCreatedAt());
-        userDTO.setUpdatedAt(user.getUpdateAt());
+        userDTO.setUpdatedAt(user.getUpdatedAt());
         return userDTO;
+    }
+
+    public void updateUserToken(String refreshToken, String email) {
+        User currentUser = this.userRepository.findByEmail(email);
+        if (currentUser != null) {
+            currentUser.setRefreshToken(refreshToken);
+            this.userRepository.save(currentUser);
+        }
+    }
+
+    public User getUserByRefreshTokenAndEmail(String refreshToken, String email) {
+        return this.userRepository.findByRefreshTokenAndEmail(refreshToken, email);
     }
 
 }
