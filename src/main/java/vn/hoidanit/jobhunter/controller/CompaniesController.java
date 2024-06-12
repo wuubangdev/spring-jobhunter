@@ -10,6 +10,7 @@ import vn.hoidanit.jobhunter.domain.Company;
 import vn.hoidanit.jobhunter.domain.response.ResultPaginateDTO;
 import vn.hoidanit.jobhunter.service.CompaniesService;
 import vn.hoidanit.jobhunter.util.anotation.ApiMessage;
+import vn.hoidanit.jobhunter.util.error.IdInvalidException;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,8 +35,11 @@ public class CompaniesController {
 
     @PostMapping("/companies")
     @ApiMessage("Create company success")
-    public ResponseEntity<Company> createCompany(@Valid @RequestBody Company company) {
-
+    public ResponseEntity<Company> createCompany(@Valid @RequestBody Company company)
+            throws IdInvalidException {
+        Company currentCompany = this.companiesService.fetchCompanyByName(company.getName());
+        if (currentCompany != null)
+            throw new IdInvalidException("Ten cong ty da ton tai!~");
         return ResponseEntity.status(HttpStatus.CREATED).body(this.companiesService.handleCreateCompany(company));
     }
 
@@ -56,7 +60,11 @@ public class CompaniesController {
 
     @PutMapping("/companies")
     @ApiMessage("Update company success")
-    public ResponseEntity<Company> putMethodName(@RequestBody Company company) {
+    public ResponseEntity<Company> putMethodName(@RequestBody Company company)
+            throws IdInvalidException {
+        Company currentCompany = this.companiesService.fetchCompanyById(company.getId());
+        if (currentCompany == null)
+            throw new IdInvalidException("Id cong ty khong ton tai!!");
         return ResponseEntity.ok().body(this.companiesService.updateCompany(company));
     }
 

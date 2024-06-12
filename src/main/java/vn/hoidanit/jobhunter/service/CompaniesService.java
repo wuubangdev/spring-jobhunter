@@ -10,17 +10,26 @@ import org.springframework.stereotype.Service;
 import vn.hoidanit.jobhunter.domain.Company;
 import vn.hoidanit.jobhunter.domain.response.ResultPaginateDTO;
 import vn.hoidanit.jobhunter.repository.CompaniesRepository;
+import vn.hoidanit.jobhunter.repository.UserRepository;
 
 @Service
 public class CompaniesService {
     private final CompaniesRepository companiesRepository;
+    private final UserRepository userRepository;
 
-    public CompaniesService(CompaniesRepository companiesRepository) {
+    public CompaniesService(
+            CompaniesRepository companiesRepository,
+            UserRepository userRepository) {
         this.companiesRepository = companiesRepository;
+        this.userRepository = userRepository;
     }
 
     public Company handleCreateCompany(Company c) {
         return this.companiesRepository.save(c);
+    }
+
+    public Company fetchCompanyByName(String name) {
+        return this.companiesRepository.findByName(name);
     }
 
     public Company fetchCompanyById(long id) {
@@ -57,6 +66,8 @@ public class CompaniesService {
     }
 
     public void deleteCompanyById(long id) {
+        Company company = this.fetchCompanyById(id);
+        userRepository.deleteAll(this.userRepository.findByCompany(company));
         this.companiesRepository.deleteById(id);
     }
 

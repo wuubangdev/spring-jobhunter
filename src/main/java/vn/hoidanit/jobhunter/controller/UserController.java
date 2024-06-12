@@ -75,7 +75,7 @@ public class UserController {
         return ResponseEntity.ok(this.userService.convertToUserDTO(updatedUser));
     }
 
-    @DeleteMapping("/user/{id}")
+    @DeleteMapping("/users/{id}")
     @ApiMessage("Delete user success")
     public ResponseEntity<Void> deleteUserById(@PathVariable("id") long id) throws IdInvalidException {
         User user = this.userService.fetchUserById(id);

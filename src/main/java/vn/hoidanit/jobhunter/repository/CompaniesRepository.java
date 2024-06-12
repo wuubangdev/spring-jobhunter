@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import vn.hoidanit.jobhunter.domain.Company;
 
 public interface CompaniesRepository extends JpaRepository<Company, Long>, JpaSpecificationExecutor<Company> {
-
+    Company findByName(String name);
 }

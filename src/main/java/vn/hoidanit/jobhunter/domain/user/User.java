@@ -9,11 +9,14 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PostPersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import vn.hoidanit.jobhunter.domain.Company;
 import vn.hoidanit.jobhunter.util.SecurityUtil;
 
 @Entity
@@ -31,6 +34,10 @@ public class User {
     @Enumerated(EnumType.STRING)
     private EnumGender gender;
     private int age;
+
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
 
     @Column(columnDefinition = "MEDIUMTEXT")
     private String refreshToken;
