@@ -4,9 +4,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.turkraft.springfilter.boot.Filter;
 
-import vn.hoidanit.jobhunter.domain.ResultPaginate;
-import vn.hoidanit.jobhunter.domain.user.ResCreateUserDTO;
-import vn.hoidanit.jobhunter.domain.user.ResUserDTO;
+import vn.hoidanit.jobhunter.domain.response.ResCreateUserDTO;
+import vn.hoidanit.jobhunter.domain.response.ResUserDTO;
+import vn.hoidanit.jobhunter.domain.response.ResultPaginateDTO;
 import vn.hoidanit.jobhunter.domain.user.User;
 import vn.hoidanit.jobhunter.service.UserService;
 import vn.hoidanit.jobhunter.util.anotation.ApiMessage;
@@ -62,7 +62,7 @@ public class UserController {
 
     @GetMapping("/users")
     @ApiMessage("Fetch list user success")
-    public ResponseEntity<ResultPaginate> getAllUser(
+    public ResponseEntity<ResultPaginateDTO> getAllUser(
             @Filter Specification<User> spec,
             Pageable pageable) throws IdInvalidException {
         return ResponseEntity.ok(this.userService.fetchAllUsers(spec, pageable));

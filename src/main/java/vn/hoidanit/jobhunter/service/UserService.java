@@ -9,10 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import vn.hoidanit.jobhunter.domain.MetaDTO;
-import vn.hoidanit.jobhunter.domain.ResultPaginate;
-import vn.hoidanit.jobhunter.domain.user.ResCreateUserDTO;
-import vn.hoidanit.jobhunter.domain.user.ResUserDTO;
+import vn.hoidanit.jobhunter.domain.response.ResCreateUserDTO;
+import vn.hoidanit.jobhunter.domain.response.ResUserDTO;
+import vn.hoidanit.jobhunter.domain.response.ResultPaginateDTO;
 import vn.hoidanit.jobhunter.domain.user.User;
 import vn.hoidanit.jobhunter.repository.UserRepository;
 
@@ -36,10 +35,10 @@ public class UserService {
         return null;
     }
 
-    public ResultPaginate fetchAllUsers(Specification<User> spec, Pageable pageable) {
+    public ResultPaginateDTO fetchAllUsers(Specification<User> spec, Pageable pageable) {
         Page<User> userCompanies = this.userRepository.findAll(spec, pageable);
-        MetaDTO mt = new MetaDTO();
-        ResultPaginate rsp = new ResultPaginate();
+        ResultPaginateDTO.Meta mt = new ResultPaginateDTO.Meta();
+        ResultPaginateDTO rsp = new ResultPaginateDTO();
         mt.setCurrent(userCompanies.getNumber() + 1);
         mt.setPageSize(userCompanies.getSize());
         mt.setTotalPages(userCompanies.getTotalPages());

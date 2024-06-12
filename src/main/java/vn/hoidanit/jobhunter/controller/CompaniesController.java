@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
 import vn.hoidanit.jobhunter.domain.Company;
-import vn.hoidanit.jobhunter.domain.ResultPaginate;
+import vn.hoidanit.jobhunter.domain.response.ResultPaginateDTO;
 import vn.hoidanit.jobhunter.service.CompaniesService;
 import vn.hoidanit.jobhunter.util.anotation.ApiMessage;
 
@@ -47,7 +47,7 @@ public class CompaniesController {
 
     @GetMapping("/companies")
     @ApiMessage("Fetch list company success")
-    public ResponseEntity<ResultPaginate> getAllCompany(
+    public ResponseEntity<ResultPaginateDTO> getAllCompany(
             @Filter Specification<Company> spec,
             Pageable pageable) {
         return ResponseEntity.ok(this.companiesService.fetchAllCompanies(spec,
