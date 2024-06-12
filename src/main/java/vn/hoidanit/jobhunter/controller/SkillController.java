@@ -5,14 +5,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.turkraft.springfilter.boot.Filter;
 
+import jakarta.validation.constraints.Null;
 import vn.hoidanit.jobhunter.domain.Skills;
 import vn.hoidanit.jobhunter.domain.response.ResultPaginateDTO;
-import vn.hoidanit.jobhunter.domain.user.User;
 import vn.hoidanit.jobhunter.service.SkillService;
 import vn.hoidanit.jobhunter.util.anotation.ApiMessage;
 import vn.hoidanit.jobhunter.util.error.IdInvalidException;
-
-import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -21,7 +19,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -51,4 +51,10 @@ public class SkillController {
         return ResponseEntity.ok(this.skillService.fetchAllSkill(spec, pageable));
     }
 
+    @DeleteMapping("/skills/{id}")
+    @ApiMessage("Delete skill")
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") long id) throws IdInvalidException {
+        this.skillService.deleteSkill(id);
+        return ResponseEntity.ok(null);
+    }
 }

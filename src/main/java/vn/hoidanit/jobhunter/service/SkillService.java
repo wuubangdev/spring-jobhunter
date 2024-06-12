@@ -65,4 +65,12 @@ public class SkillService {
         return rsp;
     }
 
+    public void deleteSkill(long id) throws IdInvalidException {
+        Skills currentSkill = this.fetchSkillsById(id);
+        if (currentSkill == null)
+            throw new IdInvalidException("Skill co id " + id + " khong ton tai!!!");
+        currentSkill.getJobs().forEach(job -> job.getSkills().remove(currentSkill));
+        this.skillRepository.delete(currentSkill);
+    }
+
 }

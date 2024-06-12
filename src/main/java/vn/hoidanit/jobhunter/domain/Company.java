@@ -18,6 +18,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
+import vn.hoidanit.jobhunter.domain.job.Job;
 import vn.hoidanit.jobhunter.domain.user.User;
 import vn.hoidanit.jobhunter.util.SecurityUtil;
 

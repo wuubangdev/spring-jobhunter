@@ -16,6 +16,7 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import vn.hoidanit.jobhunter.domain.job.Job;
 import vn.hoidanit.jobhunter.util.SecurityUtil;
 
 @Entity
