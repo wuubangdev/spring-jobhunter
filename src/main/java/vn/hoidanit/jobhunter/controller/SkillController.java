@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.turkraft.springfilter.boot.Filter;
 
-import jakarta.validation.constraints.Null;
 import vn.hoidanit.jobhunter.domain.Skills;
 import vn.hoidanit.jobhunter.domain.response.ResultPaginateDTO;
 import vn.hoidanit.jobhunter.service.SkillService;
