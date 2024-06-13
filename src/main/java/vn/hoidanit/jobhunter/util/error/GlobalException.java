@@ -25,10 +25,10 @@ public class GlobalException {
     })
     public ResponseEntity<RestResponse<Object>> IdException(Exception ex) {
         RestResponse<Object> res = new RestResponse<Object>();
-        res.setStatusCode(HttpStatus.UNAUTHORIZED.value());
+        res.setStatusCode(HttpStatus.BAD_REQUEST.value());
         res.setError(ex.getMessage());
         res.setMessage("Exception occurs...");
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
@@ -58,5 +58,16 @@ public class GlobalException {
         res.setError("No resource found exception!!!");
         res.setMessage("Exception occurs...");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
+    }
+
+    @ExceptionHandler(value = {
+            FileInvalidException.class
+    })
+    public ResponseEntity<RestResponse<Object>> FileException(Exception ex) {
+        RestResponse<Object> res = new RestResponse<Object>();
+        res.setStatusCode(HttpStatus.BAD_REQUEST.value());
+        res.setError(ex.getMessage());
+        res.setMessage("Exception upload file...");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
     }
 }
