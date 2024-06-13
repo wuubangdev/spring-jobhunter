@@ -13,6 +13,7 @@ public class ResFetchResumeDTO {
     private String email;
     private String url;
     private EnumStatus status;
+    private String companyName;
     private UserResume userResume;
     private JobResume jobResume;
     private Instant createdAt;

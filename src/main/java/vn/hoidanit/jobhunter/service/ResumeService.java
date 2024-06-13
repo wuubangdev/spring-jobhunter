@@ -44,6 +44,9 @@ public class ResumeService {
         res.setCreatedBy(r.getCreatedBy());
         res.setUpdatedAt(r.getUpdatedAt());
         res.setUpdatedBy(r.getUpdatedBy());
+        if (r.getJob() != null) {
+            res.setCompanyName(r.getJob().getCompany().getName());
+        }
         return res;
     }
 

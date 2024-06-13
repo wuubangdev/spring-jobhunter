@@ -47,7 +47,7 @@ public class JobController {
         if (currentJob == null) {
             throw new IdInvalidException("Job khong ton tai!");
         }
-        return ResponseEntity.ok(this.jobService.update(job));
+        return ResponseEntity.ok(this.jobService.update(job, currentJob));
     }
 
     @DeleteMapping("/jobs/{id}")

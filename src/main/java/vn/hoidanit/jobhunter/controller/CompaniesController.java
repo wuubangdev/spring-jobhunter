@@ -44,7 +44,7 @@ public class CompaniesController {
     }
 
     @GetMapping("/companies/{id}")
-    @ApiMessage("Fetch company success")
+    @ApiMessage("Fetch company by id")
     public ResponseEntity<Company> getCompaniesById(@PathVariable("id") long id) {
         return ResponseEntity.ok(this.companiesService.fetchCompanyById(id));
     }
