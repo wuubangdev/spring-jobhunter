@@ -1,71 +1,51 @@
-package vn.hoidanit.jobhunter.domain.job;
+package vn.hoidanit.jobhunter.domain.resume;
 
 import java.time.Instant;
-import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.PostPersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
-import vn.hoidanit.jobhunter.domain.Company;
-import vn.hoidanit.jobhunter.domain.Skills;
-import vn.hoidanit.jobhunter.domain.resume.Resume;
-import vn.hoidanit.jobhunter.domain.EnumLevel;
+import vn.hoidanit.jobhunter.domain.job.Job;
+import vn.hoidanit.jobhunter.domain.user.User;
 import vn.hoidanit.jobhunter.util.SecurityUtil;
 
 @Entity
-@Table(name = "jobs")
 @Getter
 @Setter
-public class Job {
+@Table(name = "resumes")
+public class Resume {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-    private String name;
-    private String location;
-    private double salary;
-    private int quantity;
+    @NotBlank(message = "email khong duoc de trong!")
+    private String email;
+    @NotBlank(message = "url khong duoc de trong!")
+    private String url;
     @Enumerated(EnumType.STRING)
-    private EnumLevel level;
-    @Column(columnDefinition = "MEDIUMTEXT")
-    private String description;
-    private Instant startDate;
-    private Instant endDate;
-    private boolean active;
+    private EnumStatus status;
 
     @ManyToOne
-    @JoinColumn(name = "company_id")
-    private Company company;
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "jobs" })
-    @JoinTable(name = "job_skill", joinColumns = @JoinColumn(name = "job_id"), inverseJoinColumns = @JoinColumn(name = "skill_id"))
-    private List<Skills> skills;
-
-    @OneToMany(mappedBy = "job", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<Resume> resumes;
+    @ManyToOne
+    @JoinColumn(name = "job_id")
+    private Job job;
 
     private Instant createdAt;
     private Instant updatedAt;
+
     private String createdBy;
     private String updatedBy;
 

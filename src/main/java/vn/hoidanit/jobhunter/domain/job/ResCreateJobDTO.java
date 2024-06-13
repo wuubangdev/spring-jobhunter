@@ -6,7 +6,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import vn.hoidanit.jobhunter.domain.Company;
-import vn.hoidanit.jobhunter.domain.level;
+import vn.hoidanit.jobhunter.domain.EnumLevel;
 
 @Getter
 @Setter
@@ -16,7 +16,7 @@ public class ResCreateJobDTO {
     private String location;
     private double salary;
     private int quantity;
-    private level level;
+    private EnumLevel level;
     private String description;
     private Instant startDate;
     private Instant endDate;

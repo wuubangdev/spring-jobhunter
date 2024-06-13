@@ -1,5 +1,5 @@
 package vn.hoidanit.jobhunter.domain;
 
-public enum level {
+public enum EnumLevel {
     INTER, FRESHER, JUNIOR, MIDDLE, SENIOR
 }
