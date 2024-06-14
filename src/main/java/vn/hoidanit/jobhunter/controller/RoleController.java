@@ -66,8 +66,8 @@ public class RoleController {
         Role roleDB = this.roleService.fetchById(role.getId());
         if (roleDB == null)
             throw new IdInvalidException("Id khong ton tai.");
-        if (this.roleService.isNameExist(role.getName()))
-            throw new IdInvalidException("Role name da ton tai.");
+        // if (this.roleService.isNameExist(role.getName()))
+        // throw new IdInvalidException("Role name da ton tai.");
         return ResponseEntity.ok(this.roleService.update(roleDB, role));
     }
 

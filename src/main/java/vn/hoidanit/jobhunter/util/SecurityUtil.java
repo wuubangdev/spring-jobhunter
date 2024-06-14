@@ -47,6 +47,12 @@ public class SecurityUtil {
     private long jwtKeyRefreshExpiration;
 
     public String createAccessToken(String email, ResUserTokenLogin resUserToken) {
+
+        ResUserTokenLogin.UserInsideLogin userToken = new ResUserTokenLogin.UserInsideLogin();
+        userToken.setId(resUserToken.getUserLogin().getId());
+        userToken.setEmail(resUserToken.getUserLogin().getEmail());
+        userToken.setName(resUserToken.getUserLogin().getName());
+
         Instant now = Instant.now();
         Instant validity = now.plus(jwtKeyAccessExpiration, ChronoUnit.SECONDS);
 
@@ -59,7 +65,7 @@ public class SecurityUtil {
                 .expiresAt(now)
                 .expiresAt(validity)
                 .subject(email)
-                .claim("user", resUserToken.getUserLogin())
+                .claim("user", userToken)
                 .claim("permission", listAuthority)
                 .build();
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
@@ -67,6 +73,10 @@ public class SecurityUtil {
     }
 
     public String createRefreshToken(String email, ResUserTokenLogin resUserToken) {
+        ResUserTokenLogin.UserInsideLogin userToken = new ResUserTokenLogin.UserInsideLogin();
+        userToken.setId(resUserToken.getUserLogin().getId());
+        userToken.setEmail(resUserToken.getUserLogin().getEmail());
+        userToken.setName(resUserToken.getUserLogin().getName());
         Instant now = Instant.now();
         Instant validity = now.plus(jwtKeyRefreshExpiration, ChronoUnit.SECONDS);
 
@@ -74,7 +84,7 @@ public class SecurityUtil {
                 .expiresAt(now)
                 .expiresAt(validity)
                 .subject(email)
-                .claim("user", resUserToken)
+                .claim("user", userToken)
                 .build();
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
         return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();

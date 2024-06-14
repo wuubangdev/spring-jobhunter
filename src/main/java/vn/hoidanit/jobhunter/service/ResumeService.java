@@ -8,12 +8,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.turkraft.springfilter.converter.FilterSpecification;
+import com.turkraft.springfilter.converter.FilterSpecificationConverter;
+import com.turkraft.springfilter.parser.FilterParser;
+import com.turkraft.springfilter.parser.node.FilterNode;
+
 import vn.hoidanit.jobhunter.domain.response.ResultPaginateDTO;
 import vn.hoidanit.jobhunter.domain.resume.ResFetchResumeDTO;
 import vn.hoidanit.jobhunter.domain.resume.ResUpdateResumeDTO;
 import vn.hoidanit.jobhunter.domain.resume.ResCreateResumeDTO;
 import vn.hoidanit.jobhunter.domain.resume.Resume;
 import vn.hoidanit.jobhunter.repository.ResumeRepository;
+import vn.hoidanit.jobhunter.util.SecurityUtil;
 import vn.hoidanit.jobhunter.util.error.IdInvalidException;
 
 @Service
@@ -21,11 +27,16 @@ public class ResumeService {
     private final ResumeRepository resumeRepository;
     private final JobService jobService;
     private final UserService userService;
+    private final FilterParser filterParser;
+    private final FilterSpecificationConverter filterSpecificationConverter;
 
-    public ResumeService(ResumeRepository resumeRepository, JobService jobService, UserService userService) {
+    public ResumeService(ResumeRepository resumeRepository, JobService jobService, UserService userService,
+            FilterParser filterParser, FilterSpecificationConverter filterSpecificationConverter) {
         this.resumeRepository = resumeRepository;
         this.jobService = jobService;
         this.userService = userService;
+        this.filterParser = filterParser;
+        this.filterSpecificationConverter = filterSpecificationConverter;
     }
 
     public ResFetchResumeDTO convertToGet(Resume r) {
@@ -96,6 +107,27 @@ public class ResumeService {
 
     public ResultPaginateDTO fetchAll(Specification<Resume> spec, Pageable page) {
         Page<Resume> rPage = this.resumeRepository.findAll(spec, page);
+        ResultPaginateDTO rsp = new ResultPaginateDTO();
+        ResultPaginateDTO.Meta meta = new ResultPaginateDTO.Meta();
+        meta.setCurrent(rPage.getNumber() + 1);
+        meta.setPageSize(rPage.getSize());
+        meta.setTotalPages(rPage.getTotalPages());
+        meta.setTotalIteams(rPage.getTotalElements());
+        rsp.setMeta(meta);
+        rsp.setResult(rPage.getContent()
+                .stream().map(r -> this.convertToGet(r))
+                .collect(Collectors.toList()));
+        return rsp;
+    }
+
+    public ResultPaginateDTO fetchResumeByUser(Pageable pageable) {
+        // Query builder
+        String email = SecurityUtil.getCurrentUserLogin().isPresent() == true
+                ? SecurityUtil.getCurrentUserLogin().get()
+                : "";
+        FilterNode node = this.filterParser.parse("email='" + email + "'");
+        FilterSpecification<Resume> spec = filterSpecificationConverter.convert(node);
+        Page<Resume> rPage = this.resumeRepository.findAll(spec, pageable);
         ResultPaginateDTO rsp = new ResultPaginateDTO();
         ResultPaginateDTO.Meta meta = new ResultPaginateDTO.Meta();
         meta.setCurrent(rPage.getNumber() + 1);

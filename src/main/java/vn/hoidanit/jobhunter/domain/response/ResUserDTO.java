@@ -19,15 +19,24 @@ public class ResUserDTO {
     private EnumGender gender;
     private String address;
     private int age;
-    // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
     private Instant createdAt;
-    // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
+    private String createdBy;
     private Instant updatedAt;
+    private String updatedBy;
     private UserCompany company;
+    private UserRole userRole;
 
     @Getter
     @Setter
     public static class UserCompany {
+        private long id;
+        private String name;
+
+    }
+
+    @Getter
+    @Setter
+    public static class UserRole {
         private long id;
         private String name;
 
