@@ -51,7 +51,7 @@ public class PermissionController {
             throws IdInvalidException {
         Permission currentPer = this.permissionService.fetchById(id);
         if (currentPer == null)
-            throw new IdInvalidException("Permission khong ton tai!");
+            throw new IdInvalidException("Permission co id " + id + " khong ton tai!");
         return ResponseEntity.ok(currentPer);
     }
 
@@ -70,7 +70,7 @@ public class PermissionController {
             throws IdInvalidException {
         Permission permissionDB = this.permissionService.fetchById(permission.getId());
         if (permissionDB == null)
-            throw new IdInvalidException("Permission id khong ton tai!");
+            throw new IdInvalidException("Permission co id " + permission.getId() + " khong ton tai!");
         Boolean isExist = this.permissionService
                 .checkExist(permission.getName(),
                         permission.getApiPath(),
@@ -86,7 +86,7 @@ public class PermissionController {
             throws IdInvalidException {
         Permission currentPer = this.permissionService.fetchById(id);
         if (currentPer == null)
-            throw new IdInvalidException("Permission khong ton tai!");
+            throw new IdInvalidException("Permission co id " + id + " khong ton tai!");
         this.permissionService.delete(currentPer);
         return ResponseEntity.ok(null);
     }

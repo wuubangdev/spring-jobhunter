@@ -58,6 +58,10 @@ public class PermissionService {
     }
 
     public void delete(Permission permission) {
+        if (permission.getRoles() != null) {
+            permission.getRoles()
+                    .stream().forEach(role -> role.getPermissions().remove(permission));
+        }
         this.permissionRepository.delete(permission);
     }
 }
