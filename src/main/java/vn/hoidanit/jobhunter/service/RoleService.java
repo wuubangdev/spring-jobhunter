@@ -53,10 +53,10 @@ public class RoleService {
         Page<Role> pageRole = this.roleRepository.findAll(spec, pageable);
         ResultPaginateDTO rsp = new ResultPaginateDTO();
         ResultPaginateDTO.Meta meta = new ResultPaginateDTO.Meta();
-        meta.setCurrent(pageRole.getNumber() + 1);
+        meta.setPage(pageRole.getNumber() + 1);
         meta.setPageSize(pageRole.getSize());
-        meta.setTotalPages(pageRole.getTotalPages());
-        meta.setTotalIteams(pageRole.getTotalElements());
+        meta.setPages(pageRole.getTotalPages());
+        meta.setTotal(pageRole.getTotalElements());
         rsp.setMeta(meta);
         rsp.setResult(pageRole.getContent());
         return rsp;

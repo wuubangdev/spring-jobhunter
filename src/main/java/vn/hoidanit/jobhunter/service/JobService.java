@@ -138,10 +138,10 @@ public class JobService {
         Page<Job> jobPage = this.jobRepository.findAll(spec, pageable);
         ResultPaginateDTO.Meta mt = new ResultPaginateDTO.Meta();
         ResultPaginateDTO rsp = new ResultPaginateDTO();
-        mt.setCurrent(jobPage.getNumber() + 1);
+        mt.setPage(jobPage.getNumber() + 1);
         mt.setPageSize(jobPage.getSize());
-        mt.setTotalPages(jobPage.getTotalPages());
-        mt.setTotalIteams(jobPage.getTotalElements());
+        mt.setPages(jobPage.getTotalPages());
+        mt.setTotal(jobPage.getTotalElements());
         rsp.setMeta(mt);
         rsp.setResult(jobPage.getContent());
         return rsp;
@@ -155,6 +155,7 @@ public class JobService {
             res.setId(currentJob.getId());
             res.setName(currentJob.getName());
             res.setSalary(currentJob.getSalary());
+            res.setCompany(currentJob.getCompany());
             res.setQuantity(currentJob.getQuantity());
             res.setDescription(currentJob.getDescription());
             res.setLocation(currentJob.getLocation());

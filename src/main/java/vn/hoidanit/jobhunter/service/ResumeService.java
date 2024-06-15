@@ -109,10 +109,10 @@ public class ResumeService {
         Page<Resume> rPage = this.resumeRepository.findAll(spec, page);
         ResultPaginateDTO rsp = new ResultPaginateDTO();
         ResultPaginateDTO.Meta meta = new ResultPaginateDTO.Meta();
-        meta.setCurrent(rPage.getNumber() + 1);
+        meta.setPage(rPage.getNumber() + 1);
         meta.setPageSize(rPage.getSize());
-        meta.setTotalPages(rPage.getTotalPages());
-        meta.setTotalIteams(rPage.getTotalElements());
+        meta.setPages(rPage.getTotalPages());
+        meta.setTotal(rPage.getTotalElements());
         rsp.setMeta(meta);
         rsp.setResult(rPage.getContent()
                 .stream().map(r -> this.convertToGet(r))
@@ -130,10 +130,10 @@ public class ResumeService {
         Page<Resume> rPage = this.resumeRepository.findAll(spec, pageable);
         ResultPaginateDTO rsp = new ResultPaginateDTO();
         ResultPaginateDTO.Meta meta = new ResultPaginateDTO.Meta();
-        meta.setCurrent(rPage.getNumber() + 1);
+        meta.setPage(rPage.getNumber() + 1);
         meta.setPageSize(rPage.getSize());
-        meta.setTotalPages(rPage.getTotalPages());
-        meta.setTotalIteams(rPage.getTotalElements());
+        meta.setTotal(rPage.getTotalPages());
+        meta.setTotal(rPage.getTotalElements());
         rsp.setMeta(meta);
         rsp.setResult(rPage.getContent()
                 .stream().map(r -> this.convertToGet(r))

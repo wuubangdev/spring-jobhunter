@@ -54,10 +54,10 @@ public class UserService {
         Page<User> userCompanies = this.userRepository.findAll(spec, pageable);
         ResultPaginateDTO.Meta mt = new ResultPaginateDTO.Meta();
         ResultPaginateDTO rsp = new ResultPaginateDTO();
-        mt.setCurrent(userCompanies.getNumber() + 1);
+        mt.setPage(userCompanies.getNumber() + 1);
         mt.setPageSize(userCompanies.getSize());
-        mt.setTotalPages(userCompanies.getTotalPages());
-        mt.setTotalIteams(userCompanies.getTotalElements());
+        mt.setPages(userCompanies.getTotalPages());
+        mt.setTotal(userCompanies.getTotalElements());
         rsp.setMeta(mt);
         List<ResUserDTO> listUserDTO = userCompanies
                 .getContent().stream()

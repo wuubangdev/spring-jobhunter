@@ -12,9 +12,9 @@ public class ResultPaginateDTO {
     @Getter
     @Setter
     public static class Meta {
-        private int current;
+        private int page;
         private int pageSize;
-        private int totalPages;
-        private long totalIteams;
+        private int pages;
+        private long total;
     }
 }

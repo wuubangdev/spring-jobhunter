@@ -44,10 +44,10 @@ public class CompaniesService {
         Page<Company> pageCompanies = this.companiesRepository.findAll(spec, pageable);
         ResultPaginateDTO.Meta mt = new ResultPaginateDTO.Meta();
         ResultPaginateDTO rsp = new ResultPaginateDTO();
-        mt.setCurrent(pageCompanies.getNumber() + 1);
+        mt.setPage(pageCompanies.getNumber() + 1);
         mt.setPageSize(pageCompanies.getSize());
-        mt.setTotalPages(pageCompanies.getTotalPages());
-        mt.setTotalIteams(pageCompanies.getTotalElements());
+        mt.setPages(pageCompanies.getTotalPages());
+        mt.setTotal(pageCompanies.getTotalElements());
         rsp.setMeta(mt);
         rsp.setResult(pageCompanies.getContent());
         return rsp;

@@ -40,10 +40,10 @@ public class PermissionService {
         Page<Permission> pagePer = this.permissionRepository.findAll(spec, pageable);
         ResultPaginateDTO rsp = new ResultPaginateDTO();
         ResultPaginateDTO.Meta meta = new ResultPaginateDTO.Meta();
-        meta.setCurrent(pagePer.getNumber() + 1);
+        meta.setPage(pagePer.getNumber() + 1);
         meta.setPageSize(pagePer.getSize());
-        meta.setTotalPages(pagePer.getTotalPages());
-        meta.setTotalIteams(pagePer.getTotalElements());
+        meta.setPages(pagePer.getTotalPages());
+        meta.setTotal(pagePer.getTotalElements());
         rsp.setMeta(meta);
         rsp.setResult(pagePer.getContent());
         return rsp;

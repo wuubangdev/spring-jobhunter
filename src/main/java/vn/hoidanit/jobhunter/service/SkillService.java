@@ -56,10 +56,10 @@ public class SkillService {
         Page<Skills> skillPage = this.skillRepository.findAll(spec, pageable);
         ResultPaginateDTO.Meta mt = new ResultPaginateDTO.Meta();
         ResultPaginateDTO rsp = new ResultPaginateDTO();
-        mt.setCurrent(skillPage.getNumber() + 1);
+        mt.setPage(skillPage.getNumber() + 1);
         mt.setPageSize(skillPage.getSize());
-        mt.setTotalPages(skillPage.getTotalPages());
-        mt.setTotalIteams(skillPage.getTotalElements());
+        mt.setPages(skillPage.getTotalPages());
+        mt.setTotal(skillPage.getTotalElements());
         rsp.setMeta(mt);
         rsp.setResult(skillPage.getContent());
         return rsp;
