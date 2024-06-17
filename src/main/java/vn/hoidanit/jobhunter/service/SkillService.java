@@ -70,6 +70,7 @@ public class SkillService {
         if (currentSkill == null)
             throw new IdInvalidException("Skill co id " + id + " khong ton tai!!!");
         currentSkill.getJobs().forEach(job -> job.getSkills().remove(currentSkill));
+        currentSkill.getSubscribers().forEach(subs -> subs.getSkills().remove(currentSkill));
         this.skillRepository.delete(currentSkill);
     }
 
