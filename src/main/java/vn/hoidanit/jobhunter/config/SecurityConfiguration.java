@@ -42,6 +42,9 @@ public class SecurityConfiguration {
             CustomAuthenticationEntryPoint customAuthenticationEntryPoint) throws Exception {
         String[] whiteList = { "/", "/storage/**", "/api/v1/email/**",
                 "/api/v1/auth/login", "/api/v1/auth/refresh", "/api/v1/auth/register",
+                "/v3/api-docs/**",
+                "/swagger-ui/**",
+                "/swagger-ui.html",
         };
         http
                 .csrf(c -> c.disable())
