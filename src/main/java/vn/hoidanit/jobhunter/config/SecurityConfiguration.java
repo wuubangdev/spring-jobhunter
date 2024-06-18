@@ -40,19 +40,19 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
             CustomAuthenticationEntryPoint customAuthenticationEntryPoint) throws Exception {
-        // String[] whiteList = {,
-        // };
+        String[] whiteList = { "/", "/storage/**", "/api/v1/email/**",
+                "/api/v1/auth/login", "/api/v1/auth/refresh", "/api/v1/auth/register",
+        };
         http
                 .csrf(c -> c.disable())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(
                         authz -> authz
-                                .requestMatchers("/", "/storage/**",
-                                        "/api/v1/auth/login", "/api/v1/auth/refresh", "/api/v1/auth/register")
+                                .requestMatchers(whiteList)
                                 .permitAll()
-                                .requestMatchers(HttpMethod.GET, "/api/v1/companies").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/api/v1/jobs").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/api/v1/skills").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/v1/companies/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/v1/jobs/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/v1/skills/**").permitAll()
                                 .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(Customizer.withDefaults())
