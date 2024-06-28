@@ -1,7 +1,6 @@
 package vn.hoidanit.jobhunter.service;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
@@ -15,8 +14,6 @@ import org.thymeleaf.context.Context;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import vn.hoidanit.jobhunter.domain.job.Job;
-import vn.hoidanit.jobhunter.repository.JobRepository;
 
 @Service
 public class EmailService {
@@ -24,16 +21,13 @@ public class EmailService {
     private final MailSender mailSender;
     private final JavaMailSender javaMailSender;
     private final TemplateEngine templateEngine;
-    private final JobRepository jobRepository;
 
     public EmailService(MailSender mailSender,
             JavaMailSender javaMailSender,
-            TemplateEngine templateEngine,
-            JobRepository jobRepository) {
+            TemplateEngine templateEngine) {
         this.mailSender = mailSender;
         this.javaMailSender = javaMailSender;
         this.templateEngine = templateEngine;
-        this.jobRepository = jobRepository;
     }
 
     public void sendSimpleEmail() {
